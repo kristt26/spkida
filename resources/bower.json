@@ -1,0 +1,22 @@
+{
+  "name": "mylib",
+  "homepage": "https://github.com/kristt26/spkida",
+  "authors": [
+    "kristt26 <kristt26@gmail.com>"
+  ],
+  "description": "for development web",
+  "main": "",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "^1.4.0",
+    "select2": "~3.5.2"
+    
+  }
+}

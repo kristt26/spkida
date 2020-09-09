@@ -20,7 +20,7 @@ class Kriterium extends CI_Controller{
     function index()
     {
         $data['kriteria'] = $this->Kriterium_model->get_all_kriteria();
-        
+        $data['data'] = ['title'=>'Bobot Kriteria', 'header'=>'Pembobotan'];
         $data['_view'] = 'kriterium/index';
         $this->load->view('layouts/main',$data);
     }
@@ -84,6 +84,7 @@ class Kriterium extends CI_Controller{
     function bobot()
     {
         // $data['kriteria'] = $this->Kriterium_model->get_all_kriteria();
+        $data['data'] = ['title'=>'Bobot Kriteria', 'header'=>'Pembobotan'];
         
         $data['_view'] = 'kriterium/pembobotan';
         $this->load->view('layouts/main',$data);

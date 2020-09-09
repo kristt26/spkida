@@ -17,7 +17,7 @@ class Karyawan extends CI_Controller{
     function index()
     {
         $data['karyawan'] = $this->Karyawan_model->get_all_karyawan();
-        
+        $data['data'] = ['title'=>'Karyawan', 'header'=>'Karyawan'];
         $data['_view'] = 'karyawan/index';
         $this->load->view('layouts/main',$data);
     }
@@ -38,6 +38,7 @@ class Karyawan extends CI_Controller{
         }
         else
         {            
+            $data['data'] = ['title'=>'Add Karyawan', 'header'=>'Add Karyawan'];
             $data['_view'] = 'karyawan/add';
             $this->load->view('layouts/main',$data);
         }

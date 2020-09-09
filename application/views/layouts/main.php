@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>spkida</title>
+        <title>PDAM | <?= $data['title']?></title>
         <!-- Tell the browser to be responsive to screen width -->
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
         <!-- Bootstrap 3.3.6 -->
@@ -28,7 +28,9 @@
                 <!-- Logo -->
                 <a href="" class="logo">
                     <!-- mini logo for sidebar mini 50x50 pixels -->
-                    <span class="logo-mini">SPK IDA PDAM</span>
+                    <span class="logo-mini">
+                        <img src="<?php echo site_url('resources/img/LOGO-PDAM.png');?>" width="100%" alt="">
+                    </span>
                     <!-- logo for regular state and mobile devices -->
                     <span class="logo-lg">SPK IDA PDAM</span>
                 </a>
@@ -137,11 +139,16 @@
 								<li>
                                     <a href="<?php echo site_url('karyawan/index');?>"><i class="fa fa-list-ul"></i> Listing</a>
                                 </li>
+                                <li>
+                                    <a href="<?php echo site_url('analisa/index');?>">
+                                        <i class="fa fa-dashboard"></i> <span>Analisa</span>
+                                    </a>
+                                </li>
 							</ul>
                         </li>
 						<li>
                             <a href="#">
-                                <i class="fa fa-desktop"></i> <span>User</span>
+                                <i class="fa fa-user"></i> <span>User</span>
                             </a>
                             <ul class="treeview-menu">
 								<li class="active">
@@ -153,10 +160,11 @@
 							</ul>
                         </li>
                         <li>
-                            <a href="<?php echo site_url('analisa/index');?>">
-                                <i class="fa fa-dashboard"></i> <span>Analisa</span>
-                            </a>
-                        </li>
+                                    <a href="<?php echo site_url('analisa/index');?>">
+                                        <i class="fa fa-file"></i> <span>Laporan</span>
+                                    </a>
+                                </li>
+                        
                     </ul>
                 </section>
                 <!-- /.sidebar -->
@@ -165,6 +173,15 @@
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper">
                 <!-- Main content -->
+                <section class="content-header">
+                    <h1>
+                        <?= $data['header']?>
+                    </h1>
+                    <ol class="breadcrumb">
+                        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+                        <li class="active"><?= $data['title']?></li>
+                    </ol>
+                </section>
                 <section class="content">
                     <?php                    
                     if(isset($_view) && $_view)

@@ -10,6 +10,9 @@ class Analisa extends CI_Controller{
         parent::__construct();
         $this->load->model('Pembobotan_model');
         $this->load->model('Bobotkriterium_model');
+        $this->load->model('Karyawan_model');
+        $this->load->model('Kriterium_model');
+        $this->load->library('ahp');
     } 
 
     /*
@@ -17,8 +20,8 @@ class Analisa extends CI_Controller{
      */
     function index()
     {
-        $data['pembobotan'] = $this->Pembobotan_model->get_all_pembobotan();
-        
+        // $data['pembobotan'] = $this->Pembobotan_model->get_all_pembobotan();
+        $data['data'] = ['title'=>'Analisa', 'header'=>'Analisa AHP'];
         $data['_view'] = 'pembobotan/index';
         $this->load->view('layouts/main',$data);
     }
@@ -45,14 +48,12 @@ class Analisa extends CI_Controller{
         }
     }  
 
-    function getkriteria(){
-        $data = $this->Kriterium_model->get_all_kriteria();
+    function getkaryawan(){
+        $data['karyawan'] = $this->Karyawan_model->get_all_karyawan();
+        $data['kriteria'] = $this->Kriterium_model->get_all_kriteria();
         echo json_encode($data);
     }
-
-    /*
-     * Editing a pembobotan
-     */
+    
     function edit($idpembobotan)
     {   
         // check if the pembobotan exists before trying to edit it
@@ -95,6 +96,129 @@ class Analisa extends CI_Controller{
         }
         else
             show_error('The pembobotan you are trying to delete does not exist.');
+    }
+
+    function checkcr(){
+        $value = json_decode($this->security->xss_clean($this->input->raw_input_stream), true);
+        $alternatif = $value['alternatif'];
+        $kriteria = $value['kriteria'];
+        $params = $this->Bobotkriterium_model->get_all_bobotkriteria();
+        // $data = $this->Kriterium_model->get_all_kriteria();
+        $criterias = [];
+        $ar = [];
+        $candidates = [];
+        for ($i=0; $i < count($kriteria); $i++) { 
+            array_push($criterias, $kriteria[$i]['kriteria']);
+        }
+        $b = 0;
+        for ($i=0; $i < count($kriteria); $i++) { 
+            $item = [];
+            
+            for ($j=0; $j < count($kriteria); $j++) {
+                if($i==$j){
+                    array_push($item, 1);
+                }else if($i<$j){
+                    array_push($item, $params[$b]['bobot']);
+                    $b+=1;
+                }else{
+                    array_push($item, null);
+                }
+            }
+            array_push($ar, $item);
+        }
+        
+        
+        foreach ($criterias as $key => $value) {
+            $this->ahp->addQualitativeCriteria($value);
+        }
+        $ahpCR = $this->ahp->setRelativeInterestMatrix($ar);
+        if($ahpCR->CR < 0.10){
+            for ($i=0; $i < count($alternatif); $i++) { 
+                array_push($candidates, $alternatif[$i]['nama']);
+            }
+            $this->ahp->setCandidates($candidates);
+            $pairWise = $this->ahp->setPairwise($kriteria);
+            $this->ahp->setBatchCriteriaPairWise($pairWise);
+            $ahp = $this->ahp->finalize();
+            // $ahp = $this->ahp->getResult();
+            // $ahp->deb=$this->ahp->debug();
+            echo json_encode((array)$ahp);
+
+        }else{
+            http_response_code(400);
+            echo json_encode(['message'=> "Nilai Bobot tidak konsisten Perbaiki Pembobotan Kriteria pada Menu Kriteria"]);
+        }
+        
+        // $candidates = ['TF','KS','NH','AT'];
+       
+        
+        // $ahp->setCandidates($candidates);
+        
+        // $pairWise = [
+        //     'Orientasi Pelayanan'=>
+        //     [
+        //         [1,null,null,null],
+        //         [5,1,3,6],
+        //         [4,null,1,4],
+        //         [2,null,null,1],
+        //     ],
+        //     'Integritas'=>
+        //     [
+        //         [1,null,null,5],
+        //         [5,1,2,7],
+        //         [2,null,1,5],
+        //         [null,null,null,1]
+        //     ],
+        //     'Tanggung Jawab'=>
+        //     [
+        //         [1,null,null,null,],
+        //         [5,1,2,3],
+        //         [5,null,1,3],
+        //         [2,null,null,1]
+        //     ],
+        //     'Komitmen'=>[
+        //         [1,null,null,null,],
+        //         [5,1,3,6],
+        //         [4,null,1,4],
+        //         [2,null,null,1]
+        //     ],
+        //     'Kepemimpinan'=>[
+        //         [1,null,null,null,],
+        //         [5,1,2,6],
+        //         [4,null,1,5],
+        //         [2,null,null,1]
+        //     ],
+        //     'Kerjasama'=>[
+        //         [1,3,null,2],
+        //         [null,1,null,null],
+        //         [4,5,1,3],
+        //         [null,3,null,1]
+        //     ],
+        //     'Prestasi Kerja'=>[
+        //         [1,null,null,3],
+        //         [5,1,2,5],
+        //         [3,null,1,3],
+        //         [null,null,null,1]
+        //     ],
+        //     'Wawasan'=>[
+        //         [1,2,5,5],
+        //         [null,1,3,3],
+        //         [null,null,1,2],
+        //         [null,null,null,1]
+        //     ],
+        //     'Komunikatif'=>[
+        //         [1,null,2,5],
+        //         [3,1,3,5],
+        //         [null,null,1,4],
+        //         [null,null,null,1]
+        //     ]
+        // ];
+        // $ahp->setBatchCriteriaPairWise($pairWise);
+        // $ahp->finalize();
+        
+        // print_r($ahp->getResult());
+        
+        // $ahp->debug();
     }
     
 }

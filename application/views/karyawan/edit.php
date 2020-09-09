@@ -13,12 +13,12 @@
 							<input type="text" name="nama" value="<?php echo ($this->input->post('nama') ? $this->input->post('nama') : $karyawan['nama']); ?>" class="form-control" id="nama" />
 						</div>
 					</div>
-					<div class="col-md-6">
+					<!-- <div class="col-md-6">
 						<label for="karyawancol" class="control-label">Karyawancol</label>
 						<div class="form-group">
 							<input type="text" name="karyawancol" value="<?php echo ($this->input->post('karyawancol') ? $this->input->post('karyawancol') : $karyawan['karyawancol']); ?>" class="form-control" id="karyawancol" />
 						</div>
-					</div>
+					</div> -->
 				</div>
 			</div>
 			<div class="box-footer">
